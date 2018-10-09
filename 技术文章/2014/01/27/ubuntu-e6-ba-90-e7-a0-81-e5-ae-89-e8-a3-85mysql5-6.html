@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>ubuntu 源码安装mysql5.6 ,php5.58 &mdash; Ebankie blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/01/27/ubuntu-e6-ba-90-e7-a0-81-e5-ae-89-e8-a3-85mysql5-6.html">
+    <link rel="alternate" type="application/atom+xml" title="Ebankie blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="ubuntu 源码安装mysql5.6 ,php5.58">
+      
+    <meta name="keywords" content="">
+    <meta name="og:keywords" content="">
+      
+    <meta name="description" content="一、mysql安装    进入源码包    [well]">
+    <meta name="og:description" content="一、mysql安装    进入源码包    [well]">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/01/27/ubuntu-e6-ba-90-e7-a0-81-e5-ae-89-e8-a3-85mysql5-6.html">
+    <meta property="og:site_name" content="Ebankie blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2014-01-27">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="Ebankie blog"><span class="octicon octicon-mark-github"></span> Ebankie blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="ubuntu 源码安装mysq">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">ubuntu 源码安装mysql5.6 ,php5.58</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2014/01/27
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#技术文章" title="技术文章">技术文章</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>一、mysql安装
+    进入源码包
+    [well]</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>执行以下命令，如果没有cmake sudo apt-get install cmake
+cmake . \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \   //安装目录
+-DMYSQL_DATADIR=/usr/local/mysql/data \    //数据存放目录
+-DDEFAULT_CHARSET=utf8 \                   //字符设置
+-DDEFAULT_COLLATION=utf8_general_ci \       //校验字符
+
+
+
+
+-DEXTRA_CHARSETS=all \                    //安装所有扩展字符集
+-DENABLED_LOCAL_INFILE=1                  //允许从本地导入数据
+sudo make &amp; make install
+
+
+
+
+若安装过程有如下错误
+Curses library not found.  Please install appropriate package,
+使用命令：
+sudo apt-get install libncurses5-dev
+
+初始化mysql表 
+/usr/local/mysql/scripts$ sudo ./mysql_install_db -basedir=/usr/local/mysql --datadir=/usr/local/mysql/data/ --user=mysql
+
+起动
+sudo /usr/local/mysql/bin/mysqld_safe
+查看进程信息
+ps -aux | grep mysql 
+起动成功
+修改root密码
+/usr/local/mysql/bin/# ./mysql -uroot -p
+回车，进入mysql
+mysql&gt;
+
+
+
+
+update user set Password = password('xxxxxx') where User='root';
+select * from user where user = 'root';
+flush privileges; //刷新表权限
+
+
+
+
+可以使用webmin来管理linux服务器
+
+
+
+
+
+
+
+二、php源码安装
+
+sudo tar -xvf php-5.5.8.tar.gz  sudo ./configure --prefix=/usr/local/php --with-apxs2=/usr/local/apache2/bin/apxs --with-mysql=/usr/local/mysql 有libxml错误 sudo apt-get install libxml2-dev
+
+源码安装时要用
+</code></pre>
+</div>
+
+<p>./configure –prefix=/alidata/server/php –with-mysql=/alidata/server/mysql –with-apxs2=/alidata/server/httpd-2.2.22/bin/apxs –with-libxml-dir=/usr/include/libxml2 –with-gd –with-freetype-dir=/usr/local/freetype –with-jpeg-dir=/usr/local/jpeg.6 –with-png-dir=/usr/local/libpng.1.2.8 –disable-fileinfo</p>
+
+<p>sudo make
+make test
+make install</p>
+
+<p>修改httpd.conf</p>
+
+<p>加入</p>
+
+<p>LoadModule php5_module        modules/libphp5.so //一般安装完php 变会有这行</p>
+
+<p>AddType application/x-httpd-php .php</p>
+
+<p>安装成功。</p>
+
+<p> </p>
+
+<p>三、php扩展安装以GD为例</p>
+
+<p>进入源码包</p>
+
+<p>/usr/local/source/php-5.58/ext</p>
+
+<p>sudo ./configure –with-php-config=/usr/local/php/bin/php-config</p>
+
+<p>如果提示找不到 autoconfig</p>
+
+<p>执行如下：sudo apt-get install autoconf</p>
+
+<p>sudo apt-get install libpng-dev    //linux下没有libpng，要先安装</p>
+
+<p>sudo ./configure –with-php-config=/usr/local/php/bin/php-config</p>
+
+<p>sudo make</p>
+
+<p>sudo make install</p>
+
+<p>提示成功编译，找到//usr/local/source/php-5.58/ext/gd/modules  cp 到 /usr/local/php/include/ext/下</p>
+
+<p>修改php.ini 找到 修改成 extension_dir=”/usr/local/php/include/ext/”</p>
+
+<p>增加：extension=gd.so</p>
+
+<p>重起apahce</p>
+
+<p>打印phpinfo()安装成功</p>
+
+<p>[/well]</p>
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3>Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title=""></span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+</body>
+</html>

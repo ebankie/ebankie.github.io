@@ -1,0 +1,37 @@
+# Site settings
+name: Ebankie Blog
+email: ebankie@126.com
+author: Freud Kang
+url: http://ebankie.github.io/blog/
+resume_site: http://www.ebankie.com/blog/?page_id=2
+github: https://github.com/ebankie/
+baseurl: "/blog"
+description: 卓尔有信,成就人生!
+meta_description: Ebankie Blog
+motto: Bankie Blog互联网改变人的生活
+banner: 卓尔有信,成就人生!
+
+#permalink: /:categories/:year/:month/:day/:title/
+permalink: /:year/:month/:day/:title/
+paginate: 10
+
+exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
+
+github_username: ebankie
+highlighter: rouge
+
+# Build settings
+markdown: kramdown
+
+FB:
+  comments :
+    provider : duoshuo
+    duoshuo:
+        short_name : ebankie
+    disqus :
+        short_name : ebankie
+    # facebook :
+    #   appid : 123
+    #   num_posts: 5
+    #   width: 580
+    #   colorscheme: light

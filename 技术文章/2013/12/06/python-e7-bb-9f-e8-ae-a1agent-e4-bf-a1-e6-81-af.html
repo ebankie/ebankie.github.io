@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>python 统计agent信息 &mdash; Ebankie blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2013/12/06/python-e7-bb-9f-e8-ae-a1agent-e4-bf-a1-e6-81-af.html">
+    <link rel="alternate" type="application/atom+xml" title="Ebankie blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="python 统计agent信息">
+      
+    <meta name="keywords" content="">
+    <meta name="og:keywords" content="">
+      
+    <meta name="description" content="count.py">
+    <meta name="og:description" content="count.py">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2013/12/06/python-e7-bb-9f-e8-ae-a1agent-e4-bf-a1-e6-81-af.html">
+    <meta property="og:site_name" content="Ebankie blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2013-12-06">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="Ebankie blog"><span class="octicon octicon-mark-github"></span> Ebankie blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="python 统计agent信">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">python 统计agent信息</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2013/12/06
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#技术文章" title="技术文章">技术文章</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>count.py</p>
+
+<p>[well]</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#!/usr/bin/pythona
+#-*-coding:utf-8-*-
+import re
+import os
+import sys
+from mysql import MySQL
+from datetime import *
+import time
+t1=time.time()
+ti = date.today()
+strinfo = re.compile("-")
+filetime = strinfo.sub('',str(ti))
+file = '/data/agent/'+filetime+'/useragent.log'
+fileop = open(file)
+#n=MySQL()
+#n.query('select * from t_system')
+#print n.fetchAll()
+#print date.today()
+#sys.exit(0)
+system={}
+browser={}
+vesion={}
+device={}
+num = 0
+try:
+    while True:
+          line = fileop.readline()
+          num+=1
+          if not line:
+              break
+          sys_preg = re.compile('Android|OS|Palmos|SymbianOS|Windows|flashlite|MeeGo|webOS|BlackBerry|Java|BREW')　#若每个系统加“（）效率很低下”
+          sysret = sys_preg.search(line)
+          if sysret:
+                syskey = sysret.group()
+                system[syskey]=system.get(syskey,1)+1   
+          bro_preg = re.compile('MQQBrowser|XiaoMi|360browser|Opera|UCBrowser|baidubrowser|NokiaBrowser|MSIE|Release')
+          broret = bro_preg.search(line)
+          if broret:
+                brokey=broret.group()
+                browser[brokey]=browser.get(brokey,1)+1
+          ves_preg = re.compile('Android[\/ ][\d.|_]|OS[\s]+[\d]|Palmos|SymbianOS[\/]\d|Windows[\s]+Phone[\s]+OS[\s]+\d')
+          vesret = ves_preg.search(line)
+          if vesret:
+                veskey = vesret.group()
+                strinfo = re.compile("\s")
+                vkey = strinfo.sub('',veskey)
+                vesion[vkey]=vesion.get(vkey,1)+1
+          dev_preg = re.compile('iPhone|HTC|iPod|Nexus|Lenovo|HUAWEI|ZTE|GT|SCH|SAMSUNG|Sony|TCL|Motorola|XiaoMi')
+          devret = dev_preg.search(line)
+          if devret:
+                devk = devret.group()
+                device[devk]= device.get(devk,1)+1 
+
+finally:
+    fileop.close()
+#print data
+n=MySQL()
+system['total']=num
+system['date'] = date.today()
+vesion['total']=num
+vesion['date'] = date.today()
+device['total']=num
+device['date'] = date.today()
+browser['total'] = num
+browser['date']= date.today()
+def insertSys(data):
+        n.insert('t_system',data)
+        n.commit()
+        #print n.fetchAll()
+def insertVes(data):
+        indata = {}
+        for key in data:
+            if re.search('^OS',key):
+                indata['ios'] =indata.get('ios','')+ key+':'+str(data[key])+',' 
+            elif re.search('^Android',key):
+                indata['android'] =indata.get('android','')+ key+':'+str(data[key])+',' 
+            elif re.search('^Palmos',key):
+                #'Android[\/ ][\d.|_]|OS[\s]+[\d]|Palmos|SymbianOS[\/]\d|Windows[\s]+Phone[\s]+OS[\s]+\d
+                indata['palmos'] =indata.get('palmos','')+ key+':'+str(data[key])+','
+            elif re.search('^Windows',key):
+                indata['windows'] =indata.get('windows','')+ key+':'+str(data[key])+',' 
+            elif re.search('^SymbianOS',key):
+                indata['sysmbian'] =indata.get('sysmbian','')+ key+':'+str(data[key])+','
+        indata['date']=date.today()
+        n.insert('t_sysversion',indata)
+        n.commit()
+def insertDev(data):
+        n.insert('t_devce',data)
+        n.commit()
+def insertBro(data):
+        n.insert('t_browse',data)
+        n.commit()
+#print system,browser,vesion,device
+t2=time.time()
+insertSys(system)
+insertVes(vesion)
+insertBro(browser)
+insertDev(device)
+</code></pre>
+</div>
+
+<p>[/well]</p>
+
+<p>mysql.py</p>
+
+<p>[well]</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/python</span>
+<span class="kn">import</span> <span class="nn">MySQLdb</span>
+<span class="n">OperationalError</span> <span class="o">=</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">OperationalError</span>
+<span class="k">class</span> <span class="nc">MySQL</span><span class="p">:</span>
+    <span class="n">host</span><span class="o">=</span><span class="s">'xxxx'</span>
+    <span class="n">port</span><span class="o">=</span><span class="n">xxx</span>
+    <span class="n">user</span><span class="o">=</span><span class="s">'db'</span>
+    <span class="n">passwd</span><span class="o">=</span><span class="s">'db'</span>
+    <span class="n">db</span><span class="o">=</span><span class="s">'db'</span>
+    <span class="n">conn</span><span class="o">=</span><span class="s">''</span>
+    <span class="n">cur</span><span class="o">=</span><span class="s">''</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">=</span><span class="n">MySQLdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span><span class="n">passwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">passwd</span><span class="p">,</span><span class="n">db</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Mysql Error </span><span class="si">%</span><span class="s">d: </span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">selectDb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">db</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">select_db</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Mysql Error </span><span class="si">%</span><span class="s">d: </span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sql</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">n</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">n</span>
+        <span class="k">except</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">Error</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Mysql Error:</span><span class="si">%</span><span class="s">s</span><span class="se">\n</span><span class="s">SQL:</span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">sql</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">fetchRow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">fetchAll</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="n">desc</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">description</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">inv</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">_d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">inv</span><span class="p">)):</span>
+                <span class="n">_d</span><span class="p">[</span><span class="n">desc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">inv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">table_name</span><span class="p">,</span><span class="n">data</span><span class="p">):</span>
+           <span class="n">columns</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+           <span class="n">_prefix</span><span class="o">=</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">'INSERT INTO `'</span><span class="p">,</span><span class="n">table_name</span><span class="p">,</span><span class="s">'`'</span><span class="p">])</span>
+           <span class="n">_fields</span><span class="o">=</span><span class="s">","</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">'`'</span><span class="p">,</span><span class="n">column</span><span class="p">,</span><span class="s">'`'</span><span class="p">])</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">])</span>
+           <span class="n">_values</span><span class="o">=</span><span class="s">","</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">"</span><span class="si">%</span><span class="s">s"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">))])</span>
+           <span class="n">_sql</span><span class="o">=</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">_prefix</span><span class="p">,</span><span class="s">"("</span><span class="p">,</span><span class="n">_fields</span><span class="p">,</span><span class="s">") VALUES ("</span><span class="p">,</span><span class="n">_values</span><span class="p">,</span><span class="s">")"</span><span class="p">])</span>
+           <span class="n">_params</span><span class="o">=</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">]</span>
+           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">_sql</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span><span class="nb">tuple</span><span class="p">(</span><span class="n">_params</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tbname</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">condition</span><span class="p">):</span>
+        <span class="n">_fields</span><span class="o">=</span><span class="p">[]</span>
+        <span class="n">_prefix</span><span class="o">=</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">'UPDATE `'</span><span class="p">,</span><span class="n">tbname</span><span class="p">,</span><span class="s">'`'</span><span class="p">,</span><span class="s">'SET'</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">"</span><span class="si">%</span><span class="s">s = </span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+        <span class="n">_sql</span><span class="o">=</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">_prefix</span> <span class="p">,</span><span class="n">_fields</span><span class="p">,</span> <span class="s">"WHERE"</span><span class="p">,</span> <span class="n">condition</span> <span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">_sql</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tbname</span><span class="p">,</span><span class="n">condition</span><span class="p">):</span>
+        <span class="n">_prefix</span><span class="o">=</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">'DELETE FROM  `'</span><span class="p">,</span><span class="n">tbname</span><span class="p">,</span><span class="s">'`'</span><span class="p">,</span><span class="s">'WHERE'</span><span class="p">])</span>
+        <span class="n">_sql</span><span class="o">=</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">_prefix</span><span class="p">,</span><span class="n">condition</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">_sql</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">getLastInsertId</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">lastrowid</span>
+
+    <span class="k">def</span> <span class="nf">rowcount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">rowcount</span>
+
+    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">rollback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>[/well]</p>
+
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3>Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title=""></span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+</body>
+</html>

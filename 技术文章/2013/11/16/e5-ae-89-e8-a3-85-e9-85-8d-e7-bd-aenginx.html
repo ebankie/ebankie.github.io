@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>安装配置nginx +php-fpm &mdash; Ebankie blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2013/11/16/e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-aenginx.html">
+    <link rel="alternate" type="application/atom+xml" title="Ebankie blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="安装配置nginx +php-fpm">
+      
+    <meta name="keywords" content="">
+    <meta name="og:keywords" content="">
+      
+    <meta name="description" content="  ">
+    <meta name="og:description" content="  ">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2013/11/16/e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-aenginx.html">
+    <meta property="og:site_name" content="Ebankie blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2013-11-16">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="Ebankie blog"><span class="octicon octicon-mark-github"></span> Ebankie blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="安装配置nginx +php-">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">安装配置nginx +php-fpm</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2013/11/16
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#技术文章" title="技术文章">技术文章</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <ol>
+  <li>
+
+    <p>nginx安装成功
+突然想研究一下，nginx+php的工作方式，搞近一天时间，终于可以运行了，记录下来，
+参考：1，http://blog.163.com/koumm@126/blog/static/9540383720096307529267/
+      2，http://www.inginx.com/nginx-manual-download/
+      3,http://wiki.nginx.org/NginxChs</p>
+
+    <p>系统：ubuntu /php5.3.18/nginx 1.0.15
+首先安装:nginx
+安装gcc/prce/
+  apt-get install gcc
+  apt-get install pcre-dev</p>
+
+    <p>apt-get install libpcre3-dev
+   ./configure –profix=/usr/local/nginx</p>
+
+    <p>make</p>
+
+    <p>make install</p>
+
+    <p>2，安装php
+cd /home/datasoft/php-5.3.18/
+  380  ls</p>
+
+    <p>383  ./configure –prefix=/usr/local/php5 –with-config-file-path=/usr/local/php/etc
+–enable-fastcgi //关键的两行
+–enable-fpm // fpm管理器
+–enable-force-cgi-redirect
+  384  make
+  385  make install</p>
+
+    <p>注：如果安装php， make   时 有xxx.lo错误时用,make clean之后安装成功。 如果编译环境相同的机器直接COPY就可以然后</p>
+
+    <p>echo ‘/usr/local/php/lib’ »/etc/ld.so.conf;ldconfig 就OK了
+问题2，php 解析不了，访问时下载，nginx.conf   默认loction配置问题
+建立fpm运行用户
+groupadd nobody;
+useradd nobody nobody;
+起运fpm
+/usr/local/php5/sbin/php-fpm 
+查看是否起动成功
+netstat -npl | grep 9000
+root@ubuntu:/# netstat -npl | grep 9000
+tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      907/php-fpm.conf)
+起动成功</p>
+
+    <p>配置nginx.conf</p>
+
+    <p>user  nobody;
+worker_processes  1;</p>
+
+    <p>#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;</p>
+
+    <p>pid        logs/nginx.pid;#打开这里，kill -HUP <code class="highlighter-rouge">cat /usr/local/nginx/logs/nginx.pid</code>使用</p>
+
+    <p>events {
+        use epoll; #以epoll的工作方式
+    worker_connections  1024;
+}</p>
+
+    <p>http {
+    include       mime.types;
+    default_type  application/octet-stream;</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>#log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+#                  '$status $body_bytes_sent "$http_referer" '
+#                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+#access_log  logs/access.log  main;
+
+sendfile        on;
+#tcp_nopush     on;
+
+#keepalive_timeout  0;
+keepalive_timeout  65;
+
+#gzip  on; server { 
+    listen       80; 
+    server_name  localhost; 
+
+    #charset koi8-r; 
+
+    #access_log  logs/host.access.log  main; 
+
+   # location / {    //一定要注掉这部分，否则会不解析PHP文件，而会下载 了 
+    #    root   html; 
+    #    index  index.html index.htm; 
+    #} 
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #开启以下部分以便nginx以fastcgi解析php
+    location ~ \.php$ {
+        root           /usr/local/nginx/html;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+</code></pre>
+    </div>
+
+    <p>重起nginx
+kill -HUP <code class="highlighter-rouge">cat /usr/local/nginx/logs/nginx.pid</code>
+或者 nginx -t查看nginx.conf是否配置有错误
+在IE或者其他浏览器查看，配置成功！
+备份一个有用的linux管理工具：webmin</p>
+  </li>
+  <li>
+    <p>附vhost配置文件一份</p>
+  </li>
+  <li>[well]                                                                                                                                                                                                                                              nginx.confuser nobody;
+worker_processes 8;
+worker_cpu_affinity 00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000;
+worker_rlimit_nofile 65536;error_log /dev/null;
+#error_log logs/error.log debug;</li>
+</ol>
+
+<p>events {
+use epoll;
+worker_connections 65536;
+}
+http {
+include mime.types;
+default_type application/octet-stream;</p>
+
+<p>sendfile on;</p>
+
+<p>keepalive_timeout 30;</p>
+
+<p>log_format access ‘$host $remote_addr $upstream_addr $upstream_status [$time_local] “$request” ‘
+‘$status $body_bytes_sent $request_time “$http_referer” “$http_user_agent”’;</p>
+
+<p>access_log logs/access.log access;</p>
+
+<p>client_body_buffer_size 512k;</p>
+
+<p>proxy_connect_timeout 15;
+proxy_read_timeout 60;
+proxy_send_timeout 15;
+proxy_buffer_size 16k;
+proxy_buffers 4 64k;
+proxy_busy_buffers_size 128k;
+proxy_temp_file_write_size 128k;</p>
+
+<p>ssi on;
+ssi_silent_errors on;
+ssi_types text/xml;</p>
+
+<h1 id="gzip-on">gzip on;</h1>
+<h1 id="gzip_min_length-1k">gzip_min_length 1k;</h1>
+<h1 id="gzip_buffers-4-16k">gzip_buffers 4 16k;</h1>
+
+<p>include vhosts/*.conf;     [/well]      [well]                                                                                                                                                                                                                                     server {
+listen 80;
+server_name xx.ebankie.com;</p>
+
+<p>root /data/shipei/;
+index index.htm;</p>
+
+<p>location ~ .php {
+fastcgi_pass unix:/dev/shm/php-cgi.sock;
+fastcgi_index index.php;
+fastcgi_buffer_size 32k;
+fastcgi_buffers 8 32k;</p>
+
+<p>include fastcgi.conf;
+}</p>
+
+<p>location ^~ /a/ {
+rewrite ^/a/([^/]+)/? /index.php?site=$1 last;
+rewrite ^/a/([^/]+)/? /index.php?site=$1 last;
+}</p>
+
+<p>}[/well]</p>
+
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3>Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title=""></span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+</body>
+</html>

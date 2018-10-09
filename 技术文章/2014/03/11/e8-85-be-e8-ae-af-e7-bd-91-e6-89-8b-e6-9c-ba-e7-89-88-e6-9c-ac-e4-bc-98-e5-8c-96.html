@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>腾讯网手机版本优化 &mdash; Ebankie blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/03/11/e8-85-be-e8-ae-af-e7-bd-91-e6-89-8b-e6-9c-ba-e7-89-88-e6-9c-ac-e4-bc-98-e5-8c-96.html">
+    <link rel="alternate" type="application/atom+xml" title="Ebankie blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="腾讯网手机版本优化">
+      
+    <meta name="keywords" content="">
+    <meta name="og:keywords" content="">
+      
+    <meta name="description" content="业务名称：腾讯网手机版本业务地址：http://xw.qq.com背景：项目起动快，前期基本上以面向过程的方式开发，主要使用smarty，接口API的方式实现功能。随项目进行，问题也出现。用smarty时，首次访问速度太慢。技术架构不适合后期需求扩展。第一次优化调整从两方面入手，技术构架和页面的静态化。调整后结构如下：技术构架优化：从单一入口扩展成三个版本iphone/simple/senoir  外加一个对外服务service 。三个版本APP结构类似。这样就满足大多数无线手机设备。iphone 普通版本，适合android,IOS 等等，simple适合Symbian等低端机型，senoir高端版本只适合iphone IOS用户， 一些定制化内容。并且三个版本可分布式部署，通用类库为 Libs。页面优化：首页与频道首页全面静态化，由服务器crontab定时更新页面，容错处理，接口API有问题时，页面保留最近一次更新时的数据。（这个地方后来真的起很大作用，API出问题时至少首页都是好用的）路由规则优化：由原来单一入口优化成根据业务需求访问定位不同处理逻辑，类似工厂模式">
+    <meta name="og:description" content="业务名称：腾讯网手机版本业务地址：http://xw.qq.com背景：项目起动快，前期基本上以面向过程的方式开发，主要使用smarty，接口API的方式实现功能。随项目进行，问题也出现。用smarty时，首次访问速度太慢。技术架构不适合后期需求扩展。第一次优化调整从两方面入手，技术构架和页面的静态化。调整后结构如下：技术构架优化：从单一入口扩展成三个版本iphone/simple/senoir  外加一个对外服务service 。三个版本APP结构类似。这样就满足大多数无线手机设备。iphone 普通版本，适合android,IOS 等等，simple适合Symbian等低端机型，senoir高端版本只适合iphone IOS用户， 一些定制化内容。并且三个版本可分布式部署，通用类库为 Libs。页面优化：首页与频道首页全面静态化，由服务器crontab定时更新页面，容错处理，接口API有问题时，页面保留最近一次更新时的数据。（这个地方后来真的起很大作用，API出问题时至少首页都是好用的）路由规则优化：由原来单一入口优化成根据业务需求访问定位不同处理逻辑，类似工厂模式">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/03/11/e8-85-be-e8-ae-af-e7-bd-91-e6-89-8b-e6-9c-ba-e7-89-88-e6-9c-ac-e4-bc-98-e5-8c-96.html">
+    <meta property="og:site_name" content="Ebankie blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2014-03-11">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="Ebankie blog"><span class="octicon octicon-mark-github"></span> Ebankie blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="腾讯网手机版本优化">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">腾讯网手机版本优化</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2014/03/11
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#技术文章" title="技术文章">技术文章</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>业务名称：腾讯网手机版本
+业务地址：http://xw.qq.com
+<img src="http://km.oa.com/files/post_photo/760/180760/9cad2344fc314c8d480d99410f238169.png" alt="" />
+背景：项目起动快，前期基本上以面向过程的方式开发，主要使用smarty，接口API的方式实现功能。随项目进行，问题也出现。用smarty时，首次访问速度太慢。技术架构不适合后期需求扩展。第一次优化调整从两方面入手，技术构架和页面的静态化。
+调整后结构如下：
+<img src="http://km.oa.com/files/photos/pictures/201311/1383793842_21.png" alt="" />
+技术构架优化：从单一入口扩展成三个版本iphone/simple/senoir  外加一个对外服务service 。三个版本APP结构类似。这样就满足大多数无线手机设备。iphone 普通版本，适合android,IOS 等等，simple适合Symbian等低端机型，senoir高端版本只适合iphone IOS用户， 一些定制化内容。并且三个版本可分布式部署，通用类库为 Libs。
+页面优化：首页与频道首页全面静态化，由服务器crontab定时更新页面，容错处理，接口API有问题时，页面保留最近一次更新时的数据。（这个地方后来真的起很大作用，API出问题时至少首页都是好用的）
+路由规则优化：由原来单一入口优化成根据业务需求访问定位不同处理逻辑，类似工厂模式</p>
+
+<p>这次优化大大降低耦合度，解决了新需求的扩展与首页页面访问速度问题（基本小于500MS），基本是新的需求能很快响应。尔后使用smarty缓存的问题显示出现了，缓存文件太大占满磁盘导致WEB服务器死掉。
+第二次优化缓存与文章页面，不再使用smarty自有缓存，重新设计缓存逻辑，基本思路是使用静态文件缓存，根据时间来更新缓存。动态判断磁盘空间删除缓存，让每个访问用户成为清理缓存的触发者。
+设计核心代码：
+创建缓存：
+<img src="http://km.oa.com/files/photos/pictures/201311/1383795884_61.png" alt="" /></p>
+
+<p>删除缓存：此个是访问用户触发。
+<img src="http://km.oa.com/files/photos/pictures/201311/1383796047_19.png" alt="" />
+读取缓存是根据文件修改时间，过期则重新写缓存。其他优化细节把不需要加载smarty库文件地方去掉，按需加载。优化效果如下：
+<img src="http://km.oa.com/files/photos/pictures/201311/1383796512_4.png" alt="" />
+本地速度提高近三倍
+线上测试也近提高三倍
+<img src="http://km.oa.com/files/photos/pictures/201311/1383808642_63.png" alt="" />
+提高速度的原因总结为：使用新缓存方式，文件按需要加载和其他比如调整判断缓存代码等。</p>
+
+<p>项目今年进行首页改版后发现个问题，首页二级栏目过多，加载耗时，静态化首页逻辑需要再重新设计。优化点，首页也要按需加载，用户往下滑动时再加载，数据用内存cache，节省API时间，后续补充完善……</p>
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3>Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title=""></span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+</body>
+</html>

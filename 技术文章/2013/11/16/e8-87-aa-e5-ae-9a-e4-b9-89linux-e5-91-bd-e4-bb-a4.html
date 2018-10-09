@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>自定义linux命令 &mdash; Ebankie blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2013/11/16/e8-87-aa-e5-ae-9a-e4-b9-89linux-e5-91-bd-e4-bb-a4.html">
+    <link rel="alternate" type="application/atom+xml" title="Ebankie blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="自定义linux命令">
+      
+    <meta name="keywords" content="">
+    <meta name="og:keywords" content="">
+      
+    <meta name="description" content="安装好了，lnmp之后 经常会用到重起，php命令行，所以查了些资料设置自定义命令的方法">
+    <meta name="og:description" content="安装好了，lnmp之后 经常会用到重起，php命令行，所以查了些资料设置自定义命令的方法">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2013/11/16/e8-87-aa-e5-ae-9a-e4-b9-89linux-e5-91-bd-e4-bb-a4.html">
+    <meta property="og:site_name" content="Ebankie blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2013-11-16">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="Ebankie blog"><span class="octicon octicon-mark-github"></span> Ebankie blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="自定义linux命令">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">自定义linux命令</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2013/11/16
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#技术文章" title="技术文章">技术文章</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>安装好了，lnmp之后 经常会用到重起，php命令行，所以查了些资料设置自定义命令的方法</p>
+
+<p>方法一:</p>
+
+<p>编辑.bashrc 文件,加入以下两行代码,</p>
+
+<p>alias nginx=’/usr/local/nginx/sbin/nginx -s reload’
+alias php=’/usr/local/php/bin/php’</p>
+
+<p>重新reload一下.bashrc文件，命令：source .bashrc</p>
+
+<p>测试 php -m 和nginx ，你系统命令ls ,ll一样可以使用，</p>
+
+<p>其他方法</p>
+
+<p>1、直接在命令行中设置PATH</p>
+<h1 id="pathpathusrlocalapachebin">PATH=$PATH:/usr/local/apache/bin</h1>
+<p>使用这种方法,只对当前会话有效，也就是说每当登出或注销系统以后，PATH设置就会失效。</p>
+
+<p>2、在profile中设置PATH</p>
+<h1 id="vi-etcprofile">vi /etc/profile</h1>
+<p>找到export行，在下面新增加一行，内容为：export PATH=$PATH:/usr/local/apache/bin。
+注：＝ 等号两边不能有任何空格。这种方法最好,除非手动强制修改PATH的值,否则将不会被改变。
+编辑/etc/profile后PATH的修改不会立马生效，如果需要立即生效的话，可以执行# source profile命令。</p>
+
+<p>3、在当前用户的profile中设置PATH</p>
+<h1 id="vi-bash_profile">vi ~/.bash_profile</h1>
+<p>修改PATH行,把/usr/local/apache/bin添加进去,如：PATH=$PATH:$HOME/bin:/usr/local/apache/bin。</p>
+<h1 id="source-bash_profile">source ~/.bash_profile</h1>
+<p>让这次的修改生效。
+注：这种方法只对当前用户起作用的,其他用户该修改无效。</p>
+
+<p>去掉自定义命令</p>
+
+<p>编辑上述文件，注释掉即可，</p>
+
+<p>安装lnmp时，遇到php5.4编译不了的情况下，在运维的协助下把另一个服务器编译好的COPY下来，然后运行</p>
+
+<p>动态加载库命令搞定—记下来：
+echo ‘/usr/local/php/lib’ »/etc/ld.so.conf;ldconfig</p>
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3>Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title=""></span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+</body>
+</html>

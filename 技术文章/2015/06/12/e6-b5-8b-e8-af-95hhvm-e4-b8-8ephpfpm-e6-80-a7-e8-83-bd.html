@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>测试hhvm 与phpfpm性能 &mdash; Ebankie blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/06/12/e6-b5-8b-e8-af-95hhvm-e4-b8-8ephpfpm-e6-80-a7-e8-83-bd.html">
+    <link rel="alternate" type="application/atom+xml" title="Ebankie blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="测试hhvm 与phpfpm性能">
+      
+    <meta name="keywords" content="">
+    <meta name="og:keywords" content="">
+      
+    <meta name="description" content="总是说hhvm性能很高亲测试数据如下：">
+    <meta name="og:description" content="总是说hhvm性能很高亲测试数据如下：">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/06/12/e6-b5-8b-e8-af-95hhvm-e4-b8-8ephpfpm-e6-80-a7-e8-83-bd.html">
+    <meta property="og:site_name" content="Ebankie blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2015-06-12">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="Ebankie blog"><span class="octicon octicon-mark-github"></span> Ebankie blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="测试hhvm 与phpfpm性">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">测试hhvm 与phpfpm性能</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2015/06/12
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#技术文章" title="技术文章">技术文章</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>总是说hhvm性能很高亲测试数据如下：</p>
+
+<p>从cpu\mem\io 三个方面</p>
+
+<p>服务器：</p>
+
+<p>cpu 8核 3.30GHz</p>
+
+<p>mem 16G</p>
+
+<p>disk 500G</p>
+
+<p>一、time 测试：</p>
+
+<p>网上的例子CUP</p>
+
+<p>test.php</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;?php
+function fib($n)
+{
+    if ($n &lt;= 2)
+        return 1;
+    else
+        return fib($n-1) + fib($n-2);
+}
+
+$n = 36;
+printf("fib(%d) = %d\n", $n, fib($n, 2));
+?&gt;
+root#time hhvm test.php
+</code></pre>
+</div>
+
+<p>real 0m0.407s
+user 0m0.336s
+sys 0m0.068s</p>
+
+<p>root #time php test.php</p>
+
+<p>real 0m1.046s
+user 0m0.952s
+sys 0m0.092s</p>
+
+<p>内存及IO 也相差类似</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>二、ab测试
+ab -c1000 -n500 http://xxx.xxx.com/test.php
+分别在hhvm php-fpm下
+</code></pre>
+</div>
+
+<p>php-fpm:数据：</p>
+
+<p>Server Port: 80</p>
+
+<p>Document Path: /test.php
+Document Length: 0 bytes</p>
+
+<p>Concurrency Level: 500
+Time taken for tests: 40.838 seconds
+Complete requests: 1000
+Failed requests: 0
+Write errors: 0
+Total transferred: 159000 bytes
+HTML transferred: 0 bytes
+Requests per second: 24.49 [#/sec] (mean)
+Time per request: 20419.000 [ms] (mean)
+Time per request: 40.838 [ms] (mean, across all concurrent reque
+Transfer rate: 3.80 [Kbytes/sec] received</p>
+
+<p>Connection Times (ms)
+min mean[+/-sd] median max
+Connect: 40 41 0.5 41 43
+Processing: 52 15287 6568.0 20288 20420
+Waiting: 52 10177 5887.2 10185 20417
+Total: 92 15328 6567.9 20328 20461</p>
+
+<p>hhvm:</p>
+
+<p>Document Path: /test.php
+Document Length: 0 bytes</p>
+
+<p>Concurrency Level: 500
+Time taken for tests: 40.834 seconds
+Complete requests: 1000
+Failed requests: 0
+Write errors: 0
+Total transferred: 197000 bytes
+HTML transferred: 0 bytes
+Requests per second: 24.49 [#/sec] (mean)
+Time per request: 20417.000 [ms] (mean)
+Time per request: 40.834 [ms] (mean, across all concurrent reques
+Transfer rate: 4.71 [Kbytes/sec] received</p>
+
+<p>Connection Times (ms)
+min mean[+/-sd] median max
+Connect: 40 41 0.5 41 42
+Processing: 44 15287 6567.5 20297 20414
+Waiting: 44 10199 5887.7 10216 20409
+Total: 85 15328 6567.4 20338 20454</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>经测试qps相差不多，基本一样（很是奇怪）但是 HHVM在c1000 n1000时，确实抗住了，但是php-fpm在同环境下，机器死掉
+
+再看负载：
+php-fpm
+load average: 0.22, 0.08, 0.03
+hhvm
+
+
+
+
+load average: 0.12, 0.08, 0.03
+
+总体来看 hhvm性能是优于fpm的
+</code></pre>
+</div>
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3>Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title=""></span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+</body>
+</html>
